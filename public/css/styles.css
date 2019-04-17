@@ -186,6 +186,11 @@ button:disabled {
     font-weight: 300;
     padding: 12px 24px 0 24px;
 }
+
+/* new css */
 h3{
     margin: 10px;
+}
+.message__title{
+      display: flex;
 }
