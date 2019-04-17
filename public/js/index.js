@@ -1,3 +1,4 @@
+
 let socket = io();
 socket.on('connect', function () {
     console.log("new one is here");
@@ -7,17 +8,18 @@ socket.on('disconnect', function () {
 });
 
 socket.on("newMessage", function (message) {
-    console.log('new message ', message);
+    let timeStamp = moment(message.createdAt).format('h:mm a');
     let li = jQuery("<li> </li>");
-    li.text(`${message.from}: ${message.text}`);
+    li.text(`${message.from} ${timeStamp}: ${message.text}`);
 
     jQuery('#messages').append(li);
 })
 
 socket.on("newLocationMessage", function (message) {
+    let timeStamp = moment(message.createdAt).format('h:mm a');
     let li = jQuery("<li> </li>");
     let a = jQuery('<a target="_blank"> my current location</a>');
-    li.text(`${message.from}:`);
+    li.text(`${message.from} ${timeStamp}:`);
     a.attr('href', message.url);
     li.append(a)
 
