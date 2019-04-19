@@ -1,6 +1,24 @@
 
 let socket = io();
 
+(function ($) {
+    $.deparam = $.deparam || function (uri) {
+        if (uri === undefined) {
+            uri = window.location.search;
+        }
+        var queryString = {};
+        uri.replace(
+            new RegExp(
+                "([^?=&]+)(=([^&#]*))?", "g"),
+            function ($0, $1, $2, $3) {
+                queryString[$1] = decodeURIComponent($3.replace(/\+/g, '%20'));
+            }
+        );
+        return queryString;
+    };
+})(jQuery);
+
+
 function scrollToBottom() {
     let messages = jQuery('#messages');
     let newMessage = messages.children('li:last-child');
@@ -16,10 +34,26 @@ function scrollToBottom() {
 }
 
 socket.on('connect', function () {
-    console.log("new one is here");
+    let params = jQuery.deparam(location.search);
+    socket.emit("join", params, function (error) {
+        if (error) {
+            alert(error);
+            window.location.href = '/';
+        } else {
+            console.log('no error');
+        }
+    })
 });
 socket.on('disconnect', function () {
     console.log("connction lost");
+});
+
+socket.on("updateUserList", function (users) {
+    let ol = jQuery("<ol></ol>");
+    users.forEach(user => {
+        ol.append(jQuery('<li></li>').text(user));
+    });
+    jQuery('#users').html(ol);
 });
 
 socket.on("newMessage", function (message) {

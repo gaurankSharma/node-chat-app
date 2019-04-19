@@ -181,12 +181,14 @@ button:disabled {
     padding: 12px 24px 0 24px;
 }
 
-.users {
+#users {
     list-style-type: none;
     font-weight: 300;
     padding: 12px 24px 0 24px;
 }
-
+#users li{
+    padding-bottom: 10px;
+}
 /* new css */
 h3{
     margin: 10px;
