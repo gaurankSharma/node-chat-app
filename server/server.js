@@ -5,6 +5,10 @@ const http = require('http');
 const { generateMessage, generateLocationMessage } = require("./util/message");
 const { isRealString } = require('./util/validation');
 const { Users } = require('./util/users');
+
+//const Locker = require("locker.js");
+//const myAppStorage = new Locker();
+
 const publicPath = path.join(__dirname + '/../public');
 const port = process.env.PORT || 3000;
 
@@ -34,7 +38,7 @@ io.on('connection', (socket) => {
     socket.on('cMessage', (message, callback) => {
         let user = users.getUser(socket.id);
         if (user && isRealString(message.text)) {
-            io.to(user.room).emit("newMessage", generateMessage(user.name, message.text))
+            io.to(user.room).emit("newMessage", generateMessage(user.name, message.text));
         }
         callback();
     });

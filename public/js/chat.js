@@ -56,14 +56,33 @@ socket.on("updateUserList", function (users) {
     jQuery('#users').html(ol);
 });
 
-socket.on("newMessage", function (message) {
-    let timeStamp = moment(message.createdAt).format('h:mm a');
+//onload 
+$(window).on("load", function () {
     let template = jQuery('#message-template').html();
-    let html = Mustache.render(template, {
+
+    for (let i = 0; i < localStorage.length; i++) {
+        if (JSON.parse(localStorage.getItem(localStorage.key(i))).text == "Well come to chat app") {
+        } else {
+            let html = Mustache.render(template, JSON.parse(localStorage.getItem(localStorage.key(i))));
+            jQuery('#messages').append(html);
+            scrollToBottom();
+        }
+    }
+})
+
+
+socket.on("newMessage", function (message) {
+    let timeStamp = moment(message.createdAt).format('h:mm:ss a');
+    let template = jQuery('#message-template').html();
+    const msgObj = {
         text: message.text,
         from: message.from,
         createdAt: timeStamp
-    });
+    };
+    let html = Mustache.render(template, msgObj);
+    //local saving messages -----
+    console.log(msgObj);
+    localStorage.setItem(timeStamp, JSON.stringify(msgObj));
     jQuery('#messages').append(html);
     scrollToBottom();
 })
@@ -107,3 +126,4 @@ locationButton.on('click', function () {
         alert("anable to fatch location");
     })
 });
+
